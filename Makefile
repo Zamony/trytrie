@@ -1,6 +1,9 @@
 CC=gcc
 CFLAGS=-std=c11 -Wall
 
+mkbin:
+	mkdir -p bin
+
 itertrie: dynlinks.o dynstring.o trie.o test_iterkeys.o
 	$(CC) $(CFLAGS) test_iterkeys.o dynlinks.o dynstring.o trie.o -o bin/itertrie
 
@@ -28,7 +31,7 @@ dynstring.o:
 trie.o:
 	$(CC) $(CFLAGS) -c src/trie.c
 
-tests: itertrie dynstringtest dynlinkstest
+tests: mkbin itertrie dynstringtest dynlinkstest
 	python3 tests/test_iterkeys.py
 	./bin/dynstringtest
 	./bin/dynlinkstest
