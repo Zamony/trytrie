@@ -6,7 +6,7 @@
 int main(int argc, char **argv){
     struct Node *trie = NewTrie();
     for (int i = 1; i < argc; i++) {
-        storeValue(trie, argv[i], i);
+        storeValue(trie, argv[i], "x");
     }
 
     int idx = -1, state = 0;

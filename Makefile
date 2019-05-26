@@ -1,5 +1,6 @@
 CC=gcc
 CFLAGS=-std=c11 -Wall
+pythoncmd=pipenv run python
 
 mkbin:
 	mkdir -p bin
@@ -32,10 +33,34 @@ trie.o:
 	$(CC) $(CFLAGS) -c src/trie.c
 
 tests: mkbin itertrie dynstringtest dynlinkstest
-	python3 tests/test_iterkeys.py
+	$(pythoncmd) tests/test_iterkeys.py
 	./bin/dynstringtest
 	./bin/dynlinkstest
 
+trieso:
+	$(CC) -c -Wall -Werror -fpic src/dynstring.c src/dynlinks.c src/trie.c
+	$(CC) -shared -o trytrie/libtrie.so dynstring.o dynlinks.o trie.o
+
+
+.ONESHELL:
+cffi: trieso
+	cd trytrie && $(pythoncmd) build_trie.py
+
+wheel: cffi
+	cp trytrie/*.so trytrie/*.o trytrie/*.c .
+	$(pythoncmd) setup.py sdist bdist_wheel
+
+wheel_upload: wheel
+	$(pythoncmd) setup.py sdist upload
+
 clean:
-	rm -rf *.o
-	rm -rf ./bin/*
+	rm -f *.so
+	rm -f *.c
+	rm -f *.o
+	rm -rf bin
+	rm -rf build
+	rm -rf dist
+	rm -f trytrie/*.so
+	rm -f trytrie/*.c
+	rm -f trytrie/*.o
+	rm -rf trytrie.egg-info

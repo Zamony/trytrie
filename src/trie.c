@@ -43,7 +43,7 @@ struct Node * addLink(struct Node *node, char token) {
 
         struct Node *new_node = (struct Node *) malloc(sizeof(struct Node));
         new_node->used = 0;
-        new_node->value = 0;
+        new_node->value = NULL;
         new_node->nlink = 0;
         new_node->links = NULL;
 
@@ -60,7 +60,7 @@ struct Node * addLink(struct Node *node, char token) {
 }
 
 
-void storeValue(struct Node *node, char *key, int value) {
+void storeValue(struct Node *node, char *key, char *value) {
     int n = strlen(key);
     struct Node *next_node = node;
     for (int i = 0; i < n; i++) {
@@ -169,7 +169,7 @@ struct Node * iterKeys(
 struct Node * NewTrie() {
     struct Node *node = (struct Node *) malloc(sizeof(struct Node));
     node->used = 0;
-    node->value = 0;
+    node->value = NULL;
     node->nlink = 0;
     node->links = NULL;
 

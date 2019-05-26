@@ -7,8 +7,8 @@ int test_store_value() {
     int flag = 0;
     struct Node *trie = NewTrie();
 
-    storeValue(trie, "abcd", 1);
-    storeValue(trie, "abce", 2);
+    storeValue(trie, "abcd", "x");
+    storeValue(trie, "abce", "y");
 
     struct Node *node = findKey(trie, "ab");
     if (node && node->used) {
@@ -19,6 +19,9 @@ int test_store_value() {
     node = findKey(trie, "abcd");
     if (!node || !(node->used)) {
         printf("abcd not found or not used\n");
+        flag = 1;
+    } else if (node->value[0] != "x") {
+        printf("key != x, = %c", node->value[0]);
         flag = 1;
     }
 
@@ -37,9 +40,9 @@ int test_store_value() {
 int test_delete_value() {
     int flag = 0;
     struct Node *trie = NewTrie();
-    storeValue(trie, "a", 1);
-    storeValue(trie, "ab", 1);
-    storeValue(trie, "b", 1);
+    storeValue(trie, "a", "x");
+    storeValue(trie, "ab", "x");
+    storeValue(trie, "b", "x");
 
     deleteKey(trie, "a");
     struct Node *node = findKey(trie, "ab");

@@ -12,7 +12,7 @@ struct Link {
 
 struct Node {
     unsigned char used;
-    int value;
+    char *value;
     int nlink;
     struct Link **links;
 };
@@ -20,7 +20,7 @@ struct Node {
 
 int findLink(struct Node *node, char token);
 struct Node * addLink(struct Node *node, char token);
-void storeValue(struct Node *node, char *key, int value);
+void storeValue(struct Node *node, char *key, char *value);
 struct Node * findKey(struct Node *node, char *key);
 int deleteKey(struct Node *node, char *key);
 struct Node * iterKeys(
