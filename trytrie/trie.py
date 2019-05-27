@@ -1,5 +1,30 @@
+import sys
+import os
+
+try:
+    from _trytrie import lib, ffi
+except ImportError:
+    modpath = os.getcwd()
+    if sys.platform == 'win32':
+        os.environ['PATH'] = modpath
+    elif sys.platform == 'darwin':
+        os.environ['DYLD_LIBRARY_PATH'] = modpath
+    else:
+        os.environ['LD_LIBRARY_PATH'] = modpath
+
+    args = [sys.executable,] + sys.argv
+    os.execv(args[0], args)
+
 import json
-from _trytrie import lib, ffi
+import pickle
+
+
+def bytes_encoder(obj):
+    return pickle.dumps(obj).hex()
+
+
+def bytes_decoder(s):
+    return pickle.loads(bytes(bytearray.fromhex(s)))
 
 
 class Trie:
@@ -9,11 +34,11 @@ class Trie:
         if encoder:
             self.encoder = encoder
         else:
-            self.encoder = json.dumps
+            self.encoder = bytes_encoder
         if decoder:
             self.decoder = decoder
         else:
-            self.decoder = json.loads
+            self.decoder = bytes_decoder
 
     def get(self, key, value=None):
         node = lib.findKey(self.trie, key.encode("utf-8"))
@@ -84,4 +109,3 @@ class Trie:
             val = ffi.string(trie_it.value).decode("utf-8")
             yield self.decoder(val)
             trie_it = lib.iterKeys(trie_it, self.trie, s, stack, idx, state)
-    

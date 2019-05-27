@@ -4,13 +4,15 @@ import glob
 
 from setuptools import setup, find_packages, Extension
 
-os.chdir(os.path.dirname(sys.argv[0]) or ".")
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 setup(
     name="trytrie",
-    version="1.0",
+    version="1.2",
     description="Fast and memory efficient Trie implementation for Python",
-    long_description=open("README.md").read(),
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/Zamony/trytrie",
     author="Nikita Mochalov",
     author_email="mochalov.n@yandex.ru",
@@ -22,6 +24,8 @@ setup(
     setup_requires=["cffi>=1.0.0"],
     cffi_modules=[
         "./trytrie/build_trie.py:ffibuilder",
-    ]
+    ],
+    package_data={'trytrie': ['libtrie.so', '_trytrie.c', '_trytrie.cpython-36m-x86_64-linux-gnu.so']},
+
 )
 
